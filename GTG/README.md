@@ -15,9 +15,6 @@ Intellij에서 csv 파일을 통해 DB에 Import하는 방법은 다음의 링�
 
 ## 2. DB Schema
 
-![DB Schema](https://github.com/elimerins/GraduOther/blob/master/GTG/gtg.png)
-
-
 교양영역 코드 테이블(gn)
 
 이름 | 설명
@@ -25,7 +22,7 @@ Intellij에서 csv 파일을 통해 DB에 Import하는 방법은 다음의 링�
 cor_cd(PK) | 교양영역 코드
 name | 과목명
 
-
+    
 학과 코드 테이블(mj)
 
 이름 | 설명
@@ -34,7 +31,7 @@ univ_cd | 대학 코드
 maj_cd(PK) | 학과 코드
 name | 학과 명
 
-
+    
 과목 정보 테이블(course)
 
 이름 | 설명
