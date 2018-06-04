@@ -110,9 +110,11 @@ public class GachonDatabase {
                             "  `grade` VARCHAR(100) NOT NULL," +
                             "  `syllabus` VARCHAR(100) NULL," +
                             "  `maj_cd` VARCHAR(10)," +
+                            "  `cor_cd` VARCHAR(10)," +
                             "  PRIMARY KEY (`year`, `semester`, `code`)," +
-                            "  FOREIGN KEY (`maj_cd`) REFERENCES %s(`maj_cd`))",
-                    DB_NAME, COURSE_TABLE_NAME, MJ_TABLE_NAME);
+                            "  FOREIGN KEY (`maj_cd`) REFERENCES %s(`maj_cd`)," +
+                            "  FOREIGN KEY (`cor_cd`) REFERENCES %s(`cor_cd`))",
+                    DB_NAME, COURSE_TABLE_NAME, MJ_TABLE_NAME, GN_TABLE_NAME);
 
             createPstmt = conn.prepareStatement(query);
             createPstmt.executeUpdate();
