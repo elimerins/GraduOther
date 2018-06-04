@@ -16,3 +16,40 @@ Intellij에서 csv 파일을 통해 DB에 Import하는 방법은 다음의 링�
 ## 2. DB Schema
 
 ![DB Schema](https://github.com/elimerins/GraduOther/blob/master/GTG/gtg.png)
+
+
+교양영역 코드 테이블(gn)
+
+이름 | 설명
+----|----
+cor_cd(PK) | 교양영역 코드
+name | 과목명
+
+
+학과 코드 테이블(mj)
+
+이름 | 설명
+----|----
+univ_cd | 대학 코드
+maj_cd(PK) | 학과 코드
+name | 학과 명
+
+
+과목 정보 테이블(course)
+
+이름 | 설명
+----|----
+year(PK) | 년도
+semester(PK) | 학기
+code(PK) | 학수번호
+title | 과목명
+classification | 이수구분
+credit | 학점
+quota | 정원
+time | 강의시간
+instructor | 교수 
+room | 강의실
+grade | 비고
+syllabus | 강의계획서
+maj_cd(FK) | 학과 코드 (전공과목인 경우)
+cor_cd(FK) | 교양영역 코드 (교양과목인 경우)
