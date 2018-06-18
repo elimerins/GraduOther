@@ -1,4 +1,4 @@
-import org.jsoup.Jsoup;
+﻿import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -465,7 +465,7 @@ public class GachonDatabase {
     public static void main(String[] args) {
         GachonDatabase gd = new GachonDatabase();
 
-        gd.setConn("192.168.33.10", "gtg", "P@ssw0rd");
+        gd.setConn("localhost", "gtg", "password");
         gd.createDatabase();
         gd.createTables();
         gd.insertCodes();
