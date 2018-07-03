@@ -1,8 +1,9 @@
-﻿import org.jsoup.Jsoup;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.Console;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
@@ -243,7 +244,8 @@ public class GachonDatabase {
             conn.setCatalog(DB_NAME);
 
             insertQuery = String.format("INSERT INTO `%s` (year, semester, code, title, classification, credit, quota, " +
-                            "time, instructor, room, grade, syllabus, maj_cd) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            "time, instructor, room, grade, syllabus, maj_cd, cor_cd) " +
+                            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     COURSE_TABLE_NAME);
             insertPstmt = conn.prepareStatement(insertQuery);
         } catch (SQLException e) {
@@ -344,12 +346,12 @@ public class GachonDatabase {
 
                             try {
                                 // year, semester, code, title, classification, credit,
-                                // quota, time, instructor, room, grade, syllabus (12 columns)
+                                // quota, time, instructor, room, grade, syllabus, maj_cd, cor_cd (14 columns)
                                 insertPstmt.setInt(1, year);
                                 insertPstmt.setInt(2, hakgi);
                                 // pass the index 0(row number of table)
                                 insertPstmt.setString(3, tr.select("td").eq(1).text());
-                                insertPstmt.setString(4, tr.select("td").eq(2).text());
+                                insertPstmt.setString(4, textFilter(tr.select("td").eq(2).text()));
                                 // pass the index 3(trailer link)
                                 insertPstmt.setString(5, tr.select("td").eq(4).text());
                                 insertPstmt.setInt(6, Integer.parseInt(tr.select("td").eq(5).text()));
@@ -362,6 +364,7 @@ public class GachonDatabase {
                                 insertPstmt.setString(12, tr.select("td").eq(1).select("a")
                                         .attr("href"));
                                 insertPstmt.setString(13, maj_cd);
+                                insertPstmt.setString(14, null);
 
                                 insertPstmt.executeUpdate();
                             } catch (SQLException e) {
@@ -411,12 +414,12 @@ public class GachonDatabase {
 
                             try {
                                 // year, semester, code, title, classification, credit,
-                                // quota, time, instructor, room, grade, syllabus (12 columns)
+                                // quota, time, instructor, room, grade, syllabus, maj_cd, cor_cd (14 columns)
                                 insertPstmt.setInt(1, year);
                                 insertPstmt.setInt(2, hakgi);
                                 // pass the index 0(row number of table)
                                 insertPstmt.setString(3, tr.select("td").eq(1).text());
-                                insertPstmt.setString(4, tr.select("td").eq(2).text());
+                                insertPstmt.setString(4, textFilter(tr.select("td").eq(2).text()));
                                 // pass the index 3(trailer link)
                                 insertPstmt.setString(5, tr.select("td").eq(4).text());
                                 insertPstmt.setInt(6, Integer.parseInt(tr.select("td").eq(5).text()));
@@ -429,6 +432,7 @@ public class GachonDatabase {
                                 insertPstmt.setString(12, tr.select("td").eq(1).select("a")
                                         .attr("href"));
                                 insertPstmt.setString(13, null);
+                                insertPstmt.setString(14, cor_cd);
 
                                 insertPstmt.executeUpdate();
                             } catch (SQLException e) {
@@ -462,10 +466,21 @@ public class GachonDatabase {
         return true;
     }
 
+    public String textFilter(String text) {
+        return text.replaceAll("(&nbsp;)", "");
+    }
+
     public static void main(String[] args) {
         GachonDatabase gd = new GachonDatabase();
+        Console console = System.console();
 
-        gd.setConn("localhost", "gtg", "password");
+        System.out.print("DB USER: ");
+        String user = console.readLine();
+        System.out.print("PASSWORD: ");
+        String password = String.valueOf(console.readPassword());
+
+
+        gd.setConn("localhost", user, password);
         gd.createDatabase();
         gd.createTables();
         gd.insertCodes();
