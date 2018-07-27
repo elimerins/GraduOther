@@ -255,7 +255,7 @@ public class GachonDatabase {
         // Use Jsoup for crawling
         url = BASE_URL + "?attribute=top&lang=ko";
         try {
-            topDoc = Jsoup.connect(url).get();
+            topDoc = Jsoup.connect(url).get();//url를 연결하여 파싱할수있게 가져오기
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -290,18 +290,23 @@ public class GachonDatabase {
         }
 
         // Insert Query loop
+        //select중 name=year 중 여러개의 option을 사용하여 for 문 시작
         for (Element yearOpt : topDoc.select("select[name='year']").select("option")) {
+            //yearOpt의 attribute중 value의 값을 year value로 가져옴.
             Integer year = Integer.valueOf(yearOpt.attr("value"));
-
+            //year value를 사용한 해당 year 출력
             System.out.println(String.format("[INFO:year] %d Start!", year));
+            //year가 2018이 아닌경우 break
             if (year < 2018)
                 break;
-
+            //year를 선택한다음, name=hakgi인 select box를 찾아서 다시 option check
             for (Element hakgiOpt : topDoc.select("select[name='hakgi']").select("option")) {
+                //hakgi value를 가져옴
                 Integer hakgi = Integer.valueOf(hakgiOpt.attr("value"));
-
+                //hakgi를 출력함 = table 에서  semester key
                 System.out.println(String.format("[INFO:hakgi] %d Start!", hakgi));
-                if (hakgi != 10)
+                //hakgi별로 value가 지정되어있음. 20은 2학기
+                if (hakgi != 20)
                     continue;
 
                 String univ_cd;
@@ -313,7 +318,7 @@ public class GachonDatabase {
                 body.put("hakgi", hakgi.toString());
 
                 // Major classification code
-                body.put("isu_cd", "1");
+                body.put("isu_cd", "1");//전공을 검색할 때
 
                 try {
                     // The loop for majors
@@ -401,14 +406,16 @@ public class GachonDatabase {
                         } catch (IOException e) {
                             System.err.println(e.getMessage());
                         }
-
+                        //특정 cor-cd를 put하여 table을 추출함.
                         table = listDoc.select("table")
                                 .select("table")
                                 .eq(2);
 
+
                         // insert the subjects
                         for (Element tr : table.select("tr")) {
                             // Pass column labels
+                            // 첫번째줄은 어떤 라벨인지 보여주는것이기 때문에 패스.
                             if (tr.elementSiblingIndex() == 0)
                                 continue;
 
@@ -474,16 +481,16 @@ public class GachonDatabase {
         GachonDatabase gd = new GachonDatabase();
         Console console = System.console();
 
-        System.out.print("DB USER: ");
+        /*System.out.print("DB USER: ");
         String user = console.readLine();
         System.out.print("PASSWORD: ");
-        String password = String.valueOf(console.readPassword());
+        String password = String.valueOf(console.readPassword());*/
 
 
-        gd.setConn("localhost", user, password);
-        gd.createDatabase();
-        gd.createTables();
-        gd.insertCodes();
-        gd.insertCourses();
+        gd.setConn("localhost", "gtg", "password");
+        gd.createDatabase();//create database
+        gd.createTables();//create tables
+        gd.insertCodes();//insert codes
+        gd.insertCourses();//insert course to tables
     }
 }
